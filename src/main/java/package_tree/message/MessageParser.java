@@ -11,8 +11,11 @@ public class MessageParser {
         }
         String commandName = tokens[0];
         String packageName = tokens[1];
-        String dependencies = tokens.length > 2 ? tokens[2] : "";
-        String[] dependencyList = dependencies.split(",");
+        //check for whitespace
+        if (packageName.split("\\W",2).length > 1) {
+            throw new ParseException("contains whitespace");
+        }
+        String[] dependencyList = tokens.length > 2 ? tokens[2].split(",") : new String[]{};
 
         CommandType commandType;
         try {

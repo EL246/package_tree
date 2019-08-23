@@ -1,1 +1,15 @@
+package_tree/message/CommandCreator$1.class
+package_tree/message/commands/Command.class
+package_tree/server/Server.class
+package_tree/message/ParseException.class
+package_tree/packages/Package.class
+package_tree/message/commands/IndexCommand.class
+package_tree/message/MessageHandler.class
+package_tree/message/MessageParser.class
 package_tree/App.class
+package_tree/message/CommandType.class
+package_tree/message/CommandCreator.class
+package_tree/message/commands/RemoveCommand.class
+package_tree/message/Response.class
+package_tree/message/commands/QueryCommand.class
+package_tree/packages/PackageManager.class

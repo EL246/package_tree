@@ -1,10 +1,16 @@
 package package_tree.message;
 
 import package_tree.message.commands.Command;
+import package_tree.packages.PackageManager;
 
 public class MessageHandler {
+    private PackageManager packageManager;
 
-    public Response handle(String message) {
+    public MessageHandler() {
+        this.packageManager = new PackageManager();
+    }
+
+    public synchronized Response handle(String message) {
         MessageParser parser = new MessageParser();
         Command command;
         try {
@@ -12,8 +18,9 @@ public class MessageHandler {
         } catch (ParseException e) {
             return Response.ERROR;
         }
-        command.execute();
-        System.out.println(command);
+        if (!command.execute(packageManager)) {
+            return Response.ERROR;
+        }
         return Response.OK;
     }
 }

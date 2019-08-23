@@ -1,10 +1,9 @@
 package package_tree.message;
 
-import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class MessageHandlerTest {
@@ -15,7 +14,7 @@ public class MessageHandlerTest {
     }
 
     public static String[] validMessages() {
-        return new String[]{"INDEX|package|dep1,dep2", "QUERY|package|dep1,dep2", "REMOVE|package|dep1,dep2"};
+        return new String[]{"INDEX|package|"};
     }
 
 

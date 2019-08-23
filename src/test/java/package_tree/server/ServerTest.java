@@ -1,24 +1,42 @@
 package package_tree.server;
 
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.Socket;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ServerTest {
+    private static Socket client;
+    private static PrintWriter out;
+    private static BufferedReader in;
+
+    @BeforeAll
+    public static void setup() throws IOException {
+        client = new Socket("127.0.0.1",8080);
+        out = new PrintWriter(client.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+    }
+
     @Test
     public void givenClientMessage_whenServerRespondsWhenStarted_thenCorrect() throws IOException {
-        Socket client = new Socket("127.0.0.1",8080);
-        PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         String message = "test message";
         out.println(message);
         String response = in.readLine();
+        assertEquals(message, response);
+    }
+
+    @Test
+    public void givenMultipleClientMessage_whenServerRespondsWhenStarted_thenCorrect() throws IOException {
+    }
+
+    @AfterAll
+    public static void tearDown() throws IOException {
         in.close();
         out.close();
         client.close();
-        assertEquals(message, response);
     }
 }
