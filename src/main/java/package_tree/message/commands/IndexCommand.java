@@ -1,6 +1,5 @@
 package package_tree.message.commands;
 
-import package_tree.message.ParseException;
 import package_tree.packages.PackageIndexer;
 
 public class IndexCommand extends Command{
@@ -12,8 +11,16 @@ public class IndexCommand extends Command{
     }
 
     @Override
-    public boolean execute() throws ParseException {
-        return PackageIndexer.getInstance().index(getPackageName(),dependencies);
+    public boolean execute() {
+        final PackageIndexer packageIndexer = PackageIndexer.getInstance();
+        final String packageName = getPackageName();
+
+        if (!packageIndexer.containsDependencies(dependencies)) {
+            return false;
+        }
+
+        packageIndexer.addPackage(packageName,dependencies);
+        return true;
     }
 
     public String[] getDependencies() {
