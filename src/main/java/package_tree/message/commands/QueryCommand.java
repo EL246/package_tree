@@ -1,6 +1,6 @@
 package package_tree.message.commands;
 
-import package_tree.packages.PackageManager;
+import package_tree.packages.PackageIndexer;
 
 public class QueryCommand extends Command {
     public QueryCommand(String packageName) {
@@ -9,6 +9,6 @@ public class QueryCommand extends Command {
 
     @Override
     public boolean execute() {
-       return PackageManager.getInstance().query(getPackageName());
+       return PackageIndexer.getInstance().query(getPackageName());
     }
 }

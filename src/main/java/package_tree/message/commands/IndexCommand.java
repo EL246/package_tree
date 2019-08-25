@@ -1,7 +1,7 @@
 package package_tree.message.commands;
 
 import package_tree.message.ParseException;
-import package_tree.packages.PackageManager;
+import package_tree.packages.PackageIndexer;
 
 public class IndexCommand extends Command{
     private final String[] dependencies;
@@ -13,7 +13,7 @@ public class IndexCommand extends Command{
 
     @Override
     public boolean execute() throws ParseException {
-        return PackageManager.getInstance().index(getPackageName(),dependencies);
+        return PackageIndexer.getInstance().index(getPackageName(),dependencies);
     }
 
     public String[] getDependencies() {

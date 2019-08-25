@@ -4,20 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class PackageManager {
-    private static PackageManager instance;
+public class PackageIndexer {
     private final Map<String, Package> packages;
 
 
-    private PackageManager() {
+    private PackageIndexer() {
         this.packages = new HashMap<>();
     }
 
-    public synchronized static PackageManager getInstance() {
-        if (instance == null) {
-            instance = new PackageManager();
-        }
-        return instance;
+    private static class PackageManagerSingleton{
+        private static final PackageIndexer INSTANCE = new PackageIndexer();
+    }
+
+    public static PackageIndexer getInstance() {
+        return PackageManagerSingleton.INSTANCE;
     }
 
     public synchronized boolean index(String packageName, String[] dependencies) {
