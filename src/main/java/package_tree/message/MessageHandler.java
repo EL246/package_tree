@@ -1,6 +1,8 @@
 package package_tree.message;
 
 import package_tree.message.commands.Command;
+import package_tree.message.parser.MessageParser;
+import package_tree.message.parser.ParseException;
 
 public class MessageHandler {
 

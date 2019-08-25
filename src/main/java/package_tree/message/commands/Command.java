@@ -1,6 +1,6 @@
 package package_tree.message.commands;
 
-import package_tree.message.ParseException;
+import package_tree.message.parser.ParseException;
 
 public abstract class Command {
     private final String packageName;

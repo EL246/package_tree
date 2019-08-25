@@ -1,4 +1,4 @@
-package package_tree.message;
+package package_tree.message.parser;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

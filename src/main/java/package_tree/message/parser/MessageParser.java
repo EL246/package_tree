@@ -1,10 +1,12 @@
-package package_tree.message;
+package package_tree.message.parser;
 
+import package_tree.message.CommandCreator;
+import package_tree.message.CommandType;
 import package_tree.message.commands.Command;
 
-class MessageParser {
+public class MessageParser {
 
-    Command parse(String message) throws ParseException {
+    public Command parse(String message) throws ParseException {
         String[] tokens = message.split("\\|",-1);
         if (tokens.length != 3) {
             throw new ParseException("invalid syntax");

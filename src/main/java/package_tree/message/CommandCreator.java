@@ -4,9 +4,10 @@ import package_tree.message.commands.Command;
 import package_tree.message.commands.IndexCommand;
 import package_tree.message.commands.QueryCommand;
 import package_tree.message.commands.RemoveCommand;
+import package_tree.message.parser.ParseException;
 
-class CommandCreator {
-    static Command createCommand(CommandType commandType, String packageName, String[] dependencies) throws ParseException {
+public class CommandCreator {
+    public static Command createCommand(CommandType commandType, String packageName, String[] dependencies) throws ParseException {
         switch (commandType) {
             case INDEX:
                 return createIndexCommand(packageName,dependencies);
