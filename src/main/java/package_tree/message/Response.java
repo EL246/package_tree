@@ -1,9 +1,9 @@
 package package_tree.message;
 
 public enum Response {
-    OK("OK\n"),
-    FAIL("FAIL\n"),
-    ERROR("ERROR\n");
+    OK("OK"),
+    FAIL("FAIL"),
+    ERROR("ERROR");
 
     final String message;
 

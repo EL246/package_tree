@@ -8,7 +8,7 @@ public class RemoveCommand extends Command{
     }
 
     @Override
-    public boolean execute(PackageManager packageManager) {
-        return packageManager.remove(getPackageName());
+    public boolean execute() {
+        return PackageManager.getInstance().remove(getPackageName());
     }
 }

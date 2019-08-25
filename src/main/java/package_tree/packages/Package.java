@@ -3,34 +3,32 @@ package package_tree.packages;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Package {
-    private String name;
-    private Set<String> dependencies;
-    private Set<String> children;
+class Package {
+    private final Set<String> dependencies;
+    private final Set<String> children;
 
-    public Package(String name) {
-        this.name = name;
+    Package() {
         this.dependencies = new HashSet<>();
         this.children = new HashSet<>();
     }
 
-    public synchronized void addChild(String name) {
+    synchronized void addChild(String name) {
         children.add(name);
     }
 
-    public synchronized void addDependency(String name) {
+    synchronized void addDependency(String name) {
         dependencies.add(name);
     }
 
-    public synchronized Set<String> getChildren() {
+    synchronized Set<String> getChildren() {
         return children;
     }
 
-    public synchronized Set<String> getDependencies() {
+    synchronized Set<String> getDependencies() {
         return dependencies;
     }
 
-    public synchronized void removeChild(String name) {
+    synchronized void removeChild(String name) {
         children.remove(name);
     }
 }

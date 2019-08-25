@@ -2,20 +2,16 @@ package package_tree.message;
 
 import package_tree.message.commands.Command;
 
-public class MessageParser {
+class MessageParser {
 
-    public Command parse(String message) throws ParseException {
-        String[] tokens = message.split("\\|");
-        if (tokens.length < 2 || tokens.length > 3) {
+    Command parse(String message) throws ParseException {
+        String[] tokens = message.split("\\|",-1);
+        if (tokens.length != 3) {
             throw new ParseException("invalid syntax");
         }
         String commandName = tokens[0];
         String packageName = tokens[1];
-        //check for whitespace
-        if (packageName.split("\\W",2).length > 1) {
-            throw new ParseException("contains whitespace");
-        }
-        String[] dependencyList = tokens.length > 2 ? tokens[2].split(",") : new String[]{};
+        String[] dependencyList = tokens[2].equals("") ? new String[]{} : tokens[2].split(",");
 
         CommandType commandType;
         try {
@@ -25,6 +21,5 @@ public class MessageParser {
         }
 
         return CommandCreator.createCommand(commandType, packageName, dependencyList);
-
     }
 }

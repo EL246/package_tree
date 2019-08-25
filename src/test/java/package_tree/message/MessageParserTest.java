@@ -19,7 +19,7 @@ public class MessageParserTest {
     }
 
     public static String[] validMessages() {
-        return new String[]{"INDEX|package|dep1,dep2", "QUERY|package|dep1,dep2", "REMOVE|package|dep1,dep2"};
+        return new String[]{"INDEX|package|dep1,dep2", "QUERY|package|", "REMOVE|package|"};
     }
 
     @ParameterizedTest

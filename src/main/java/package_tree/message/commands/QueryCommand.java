@@ -8,7 +8,7 @@ public class QueryCommand extends Command {
     }
 
     @Override
-    public boolean execute(PackageManager packageManager) {
-       return packageManager.query(getPackageName());
+    public boolean execute() {
+       return PackageManager.getInstance().query(getPackageName());
     }
 }

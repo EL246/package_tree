@@ -1,17 +1,17 @@
 package package_tree.message.commands;
 
-import package_tree.packages.PackageManager;
+import package_tree.message.ParseException;
 
 public abstract class Command {
-    private String packageName;
+    private final String packageName;
 
     Command(String packageName) {
         this.packageName = packageName;
     }
 
-    public abstract boolean execute(PackageManager packageManager);
+    public abstract boolean execute() throws ParseException;
 
-    public String getPackageName() {
+    String getPackageName() {
         return packageName;
     }
 }

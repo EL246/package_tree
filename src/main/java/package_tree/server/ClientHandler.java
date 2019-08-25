@@ -12,11 +12,9 @@ public class ClientHandler extends Thread {
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
-    private MessageHandler messageHandler;
 
-    public ClientHandler(Socket clientSocket, MessageHandler messageHandler) {
+    ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
-        this.messageHandler = messageHandler;
     }
 
     public void run() {
@@ -25,10 +23,8 @@ public class ClientHandler extends Thread {
             this.out = new PrintWriter(clientSocket.getOutputStream(), true);
 
             String message;
-//            message = in.readLine();
             while ((message = in.readLine()) != null) {
-                //out.println(message);
-                out.println(messageHandler.handle(message));
+                out.println(new MessageHandler().handle(message));
             }
 
             in.close();

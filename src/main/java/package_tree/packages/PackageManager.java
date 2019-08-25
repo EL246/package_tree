@@ -3,24 +3,34 @@ package package_tree.packages;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PackageManager {
-    private Map<String, Package> packages;
 
-    public PackageManager() {
+public class PackageManager {
+    private static PackageManager instance;
+    private final Map<String, Package> packages;
+
+
+    private PackageManager() {
         this.packages = new HashMap<>();
     }
 
+    public synchronized static PackageManager getInstance() {
+        if (instance == null) {
+            instance = new PackageManager();
+        }
+        return instance;
+    }
+
     public synchronized boolean index(String packageName, String[] dependencies) {
-        // check if any dependencies aren't indexed, return false
+
         for (String dependency : dependencies) {
-            if (!query(dependency)) {
+            if (!packages.containsKey(dependency)) {
                 return false;
             }
         }
         //if package doesn't already exist, create it
         Package pkg;
         if (!packages.containsKey(packageName)) {
-            pkg = new Package(packageName);
+            pkg = new Package();
             packages.put(packageName, pkg);
         } else {
             pkg = packages.get(packageName);
@@ -57,13 +67,6 @@ public class PackageManager {
     }
 
     public synchronized boolean query(String packageName) {
-        printCurVals();
         return packages.containsKey(packageName);
-    }
-
-    public synchronized void printCurVals(){
-        for (String key : packages.keySet()) {
-            System.out.println(key);
-        }
     }
 }
