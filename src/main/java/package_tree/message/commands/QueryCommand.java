@@ -9,6 +9,6 @@ public class QueryCommand extends Command {
 
     @Override
     public boolean execute() {
-       return PackageIndexer.getInstance().containsPackage(getPackageName());
+        return PackageIndexer.containsPackage(getPackageName());
     }
 }

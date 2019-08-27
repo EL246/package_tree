@@ -1,8 +1,9 @@
 package package_tree.message.commands;
 
+import package_tree.packages.Package;
 import package_tree.packages.PackageIndexer;
 
-public class IndexCommand extends Command{
+public class IndexCommand extends Command {
     private final String[] dependencies;
 
     public IndexCommand(String packageName, String[] dependencies) {
@@ -12,15 +13,11 @@ public class IndexCommand extends Command{
 
     @Override
     public boolean execute() {
-        final PackageIndexer packageIndexer = PackageIndexer.getInstance();
-        final String packageName = getPackageName();
-
-        if (!packageIndexer.containsDependencies(dependencies)) {
-            return false;
+        Package pkg = new Package(getPackageName(), dependencies);
+        if (pkg.getDependencies().size() == 0 || PackageIndexer.dependenciesExist(pkg)) {
+            return PackageIndexer.add(pkg);
         }
-
-        packageIndexer.addPackage(packageName,dependencies);
-        return true;
+        return false;
     }
 
     public String[] getDependencies() {

@@ -9,22 +9,19 @@ public class RemoveCommand extends Command {
 
     @Override
     public boolean execute() {
-        final PackageIndexer packageIndexer = PackageIndexer.getInstance();
-        final String packageName = getPackageName();
+        String packageName = getPackageName();
 
-        // if package doesn't exist, return
-        if (!packageIndexer.containsPackage(packageName)) {
+        // if package doesn't exist, return true
+        if (!PackageIndexer.containsPackage(packageName)) {
             return true;
         }
 
         // if package contains children, unable to remove
-        if (packageIndexer.packageChildrenExist(packageName)) {
+        if (PackageIndexer.isDependedOn(packageName)) {
             return false;
         }
 
         //  delete package
-        packageIndexer.deletePackage(packageName);
-
-        return true;
+        return PackageIndexer.delete(packageName);
     }
 }
