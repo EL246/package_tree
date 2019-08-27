@@ -3,7 +3,6 @@ package package_tree.packages;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class PackageIndexer {
     private static Map<String, Package> packages;
 
