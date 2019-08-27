@@ -16,11 +16,6 @@ public class RemoveCommand extends Command {
             return true;
         }
 
-        // if package contains children, unable to remove
-        if (PackageIndexer.isDependedOn(packageName)) {
-            return false;
-        }
-
         //  delete package
         return PackageIndexer.delete(packageName);
     }

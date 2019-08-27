@@ -14,10 +14,7 @@ public class IndexCommand extends Command {
     @Override
     public boolean execute() {
         Package pkg = new Package(getPackageName(), dependencies);
-        if (pkg.getDependencies().size() == 0 || PackageIndexer.dependenciesExist(pkg)) {
-            return PackageIndexer.add(pkg);
-        }
-        return false;
+        return PackageIndexer.add(pkg);
     }
 
     public String[] getDependencies() {
