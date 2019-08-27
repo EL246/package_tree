@@ -1,14 +1,14 @@
 package package_tree.packages;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class PackageIndexer {
     private static Map<String, Package> packages;
 
     static {
-        packages = new ConcurrentHashMap<>();
+        packages = new HashMap<>();
     }
 
     public static boolean containsPackage(String packageName) {
