@@ -2,6 +2,7 @@ package package_tree.server;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,16 +11,31 @@ public class Server {
     private ServerSocket serverSocket;
     private final ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
-    public void start() throws IOException {
+    public void start() {
         System.out.println("Starting server...");
-        this.serverSocket = new ServerSocket(PORT);
-        while(true) {
-            threadPool.execute(new ClientHandler(serverSocket.accept()));
+        System.out.println("Listening on port " + PORT);
+
+        try {
+            this.serverSocket = new ServerSocket(PORT);
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                threadPool.execute(new ClientHandler(clientSocket));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stop();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void stop() throws IOException {
         this.threadPool.shutdown();
-        serverSocket.close();
+        if (serverSocket != null) {
+            serverSocket.close();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package package_tree.server;
 
 import package_tree.message.MessageHandler;
+import package_tree.message.Response;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,14 +25,20 @@ public class ClientHandler extends Thread {
 
             String message;
             while ((message = in.readLine()) != null) {
-                out.println(new MessageHandler().handle(message));
+                Response response = new MessageHandler().handle(message);
+                out.println(response.getMessage() + "\n");
             }
 
-            in.close();
-            out.close();
-            clientSocket.close();
         } catch (IOException e) {
-
+            e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+                out.close();
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
