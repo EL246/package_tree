@@ -1,34 +1,31 @@
 package package_tree.packages;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-class Package {
+public class Package {
+    private final String name;
     private final Set<String> dependencies;
-    private final Set<String> children;
 
-    Package() {
+    Package(String name) {
+        this.name = name;
         this.dependencies = new HashSet<>();
-        this.children = new HashSet<>();
     }
 
-    synchronized void addChild(String name) {
-        children.add(name);
+    public Package(String name, String[] dependencies) {
+        this.name = name;
+        List<String> depList = new ArrayList(Arrays.asList(dependencies));
+        this.dependencies = new HashSet<>(depList);
     }
 
-    synchronized void addDependency(String name) {
-        dependencies.add(name);
+    public boolean isDependentOn(String dependency) {
+        return dependencies.contains(dependency);
     }
 
-    synchronized Set<String> getChildren() {
-        return children;
-    }
-
-    synchronized Set<String> getDependencies() {
+    public Set<String> getDependencies() {
         return dependencies;
     }
 
-    synchronized void removeChild(String name) {
-        children.remove(name);
+    public String getName() {
+        return name;
     }
 }

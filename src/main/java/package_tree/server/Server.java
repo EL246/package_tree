@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 public class Server {
     private final static int PORT = 8080;
     private ServerSocket serverSocket;
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(10);
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(100);
 
     public void start() {
         System.out.println("Starting server...");
