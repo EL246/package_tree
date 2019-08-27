@@ -15,11 +15,7 @@ public class MessageParserTest {
 
     public static String[] invalidMessages() {
         return new String[]{"abcd", "", "INDEX | package | dep", "INDEX|",
-                "QUERY|", "REMOVE|", "REMOVE|package|dep1,dep2|abc"};
-    }
-
-    public static String[] validMessages() {
-        return new String[]{"INDEX|package|dep1,dep2", "QUERY|package|", "REMOVE|package|"};
+                "QUERY|", "REMOVE|", "REMOVE|package|dep1,dep2|abc", "INDEXA|A|B"};
     }
 
     @ParameterizedTest
@@ -32,7 +28,7 @@ public class MessageParserTest {
     }
 
     @Test
-    public void returnIndexCommandForIndexMessage() throws ParseException {
+    public void returnIndexCommandOnValidIndexMessage() throws ParseException {
         String indexMessage = "INDEX|package|dep1,dep2";
         MessageParser messageParser = new MessageParser();
         Command command = messageParser.parse(indexMessage);
@@ -40,7 +36,7 @@ public class MessageParserTest {
     }
 
     @Test
-    public void returnQueryCommandForQueryMessage() throws ParseException {
+    public void returnQueryCommandOnValidQueryMessage() throws ParseException {
         String indexMessage = "QUERY|package|dep1,dep2";
         MessageParser messageParser = new MessageParser();
         Command command = messageParser.parse(indexMessage);
@@ -48,7 +44,7 @@ public class MessageParserTest {
     }
 
     @Test
-    public void returnRemoveCommandForRemoveMessage() throws ParseException {
+    public void returnRemoveCommandOnValidRemoveMessage() throws ParseException {
         String indexMessage = "REMOVE|package|dep1,dep2";
         MessageParser messageParser = new MessageParser();
         Command command = messageParser.parse(indexMessage);
