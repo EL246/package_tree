@@ -32,7 +32,7 @@ public class Server {
         }
     }
 
-    public void stop() throws IOException {
+    private void stop() throws IOException {
         this.threadPool.shutdown();
         if (serverSocket != null) {
             serverSocket.close();
