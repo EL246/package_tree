@@ -5,11 +5,12 @@ import package_tree.message.CommandType;
 import package_tree.message.commands.Command;
 
 public class MessageParser {
+    private static final int expectedNumArgs = 3;
 
     public Command parse(String message) throws ParseException {
         String[] tokens = message.split("\\|",-1);
-        if (tokens.length != 3) {
-            throw new ParseException("invalid syntax");
+        if (tokens.length != expectedNumArgs) {
+            throw new ParseException("Invalid message length, expected " + expectedNumArgs + " arguments");
         }
 
         String commandName = tokens[0];
@@ -33,8 +34,7 @@ public class MessageParser {
 
     private void validatePackageName(String packageName) throws ParseException {
         if (!packageName.matches("^([a-zA-Z_][a-zA-Z0-9+_-]*\\+*)$")) {
-            System.out.println("index parsing failed: " + packageName);
-            throw new ParseException("invalid package name");
+            throw new ParseException("Invalid package name specified");
         }
     }
 }

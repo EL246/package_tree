@@ -8,15 +8,13 @@ import java.util.concurrent.Executors;
 
 public class Server {
     private final static int PORT = 8080;
-    private ServerSocket serverSocket;
     private final ExecutorService threadPool = Executors.newFixedThreadPool(100);
 
     public void start() {
         System.out.println("Starting server...");
         System.out.println("Listening on port " + PORT);
 
-        try {
-            this.serverSocket = new ServerSocket(PORT);
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 threadPool.execute(new ClientHandler(clientSocket));
@@ -24,18 +22,7 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                stop();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void stop() throws IOException {
-        this.threadPool.shutdown();
-        if (serverSocket != null) {
-            serverSocket.close();
+            this.threadPool.shutdown();
         }
     }
 }

@@ -5,9 +5,13 @@ import package_tree.message.parser.MessageParser;
 import package_tree.message.parser.ParseException;
 
 public class MessageHandler {
+    private MessageParser parser;
+
+    public MessageHandler() {
+        this.parser = new MessageParser();
+    }
 
     public Response handle(String message) {
-        MessageParser parser = new MessageParser();
         Command command;
         try {
             command = parser.parse(message);

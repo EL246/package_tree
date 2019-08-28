@@ -11,7 +11,7 @@ public class RemoveCommand extends Command {
     public boolean execute() {
         String packageName = getPackageName();
 
-        //  delete package
+        // Delete package.
         return PackageIndexer.delete(packageName);
     }
 }

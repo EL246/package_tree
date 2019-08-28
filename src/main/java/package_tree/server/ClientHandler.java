@@ -10,35 +10,28 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientHandler extends Thread {
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+    private final Socket clientSocket;
+    private MessageHandler messageHandler;
 
     ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
+        this.messageHandler = new MessageHandler();
     }
 
     public void run() {
-        try {
-            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.out = new PrintWriter(clientSocket.getOutputStream(), true);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+             clientSocket
+        ) {
 
             String message;
             while ((message = in.readLine()) != null) {
-                Response response = new MessageHandler().handle(message);
+                Response response = messageHandler.handle(message);
                 out.println(response.getMessage() + "\n");
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                in.close();
-                out.close();
-                clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

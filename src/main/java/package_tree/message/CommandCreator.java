@@ -16,7 +16,7 @@ public class CommandCreator {
             case REMOVE:
                 return createRemoveCommand(packageName);
             default:
-                throw new ParseException("invalid command type");
+                throw new ParseException("Invalid command type specified");
         }
     }
 

@@ -15,27 +15,27 @@ public class PackageIndexer {
     }
 
     public static synchronized boolean delete(String packageName) {
-        // if package doesn't exist, return true
+        // If package doesn't exist, return true.
         if (!containsPackage(packageName)) {
             return true;
         }
 
-        // if other packages are dependent on this package, unable to remove
+        // If other packages are dependent on this package, unable to remove.
         if (isDependedOn(packageName)) {
             return false;
         }
 
-        // remove package from packages Map
+        // Remove package from packages Map.
         packages.remove(packageName);
         return true;
     }
 
     public static synchronized boolean add(Package pkg) {
-        // check if dependencies exist, if missing return false
+        // Check if dependencies exist, if missing return false.
         if (!dependenciesExist(pkg)) {
             return false;
         }
-        //add package to index, or update dependencies
+        // Add package to index, or update dependencies.
         packages.put(pkg.getName(), pkg);
         return true;
     }
@@ -45,7 +45,7 @@ public class PackageIndexer {
     }
 
     private static boolean isDependedOn(String packageName) {
-        // checks if other packages are dependent on this package
+        // Checks if other packages are dependent on this package.
         for (Package indexed : packages.values()) {
             if (indexed.isDependentOn(packageName)) {
                 return true;
