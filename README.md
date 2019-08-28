@@ -57,7 +57,8 @@ Listening on port 8080
 ## Running the tests
 
 To run the tests simply run the following commands in the project directory. Maven
-should be [installed](https://maven.apache.org/download.cgi) for this to work.
+should be [installed](https://maven.apache.org/download.cgi) for this to work. JUnit 
+and PowerMock testing frameworks were used for this project.
 
 ````
 mvn clean
