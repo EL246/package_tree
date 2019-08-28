@@ -21,14 +21,13 @@ public class MessageHandlerTest {
     @ParameterizedTest
     @MethodSource("validMessages")
     public void returnOkForValidMessage(String message) {
-        MessageHandler messageHandler = new MessageHandler();
-        assertEquals(Response.OK, messageHandler.handle(message));
+        assertEquals(Response.OK, MessageHandler.handle(message));
     }
 
     @ParameterizedTest
     @MethodSource("invalidMessages")
     public void returnErrorForInvalidMessage(String message) {
         MessageHandler messageHandler = new MessageHandler();
-        assertEquals(Response.ERROR, messageHandler.handle(message));
+        assertEquals(Response.ERROR, MessageHandler.handle(message));
     }
 }

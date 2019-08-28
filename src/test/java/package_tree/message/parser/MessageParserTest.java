@@ -21,41 +21,36 @@ public class MessageParserTest {
     @ParameterizedTest
     @MethodSource("invalidMessages")
     public void throwParseExceptionOnInvalidMessage(String message) {
-        MessageParser messageParser = new MessageParser();
         Assertions.assertThrows(ParseException.class, () -> {
-            messageParser.parse(message);
+            MessageParser.parse(message);
         });
     }
 
     @Test
     public void returnIndexCommandOnValidIndexMessage() throws ParseException {
         String indexMessage = "INDEX|package|dep1,dep2";
-        MessageParser messageParser = new MessageParser();
-        Command command = messageParser.parse(indexMessage);
+        Command command = MessageParser.parse(indexMessage);
         Assertions.assertTrue(command instanceof IndexCommand);
     }
 
     @Test
     public void returnQueryCommandOnValidQueryMessage() throws ParseException {
         String indexMessage = "QUERY|package|dep1,dep2";
-        MessageParser messageParser = new MessageParser();
-        Command command = messageParser.parse(indexMessage);
+        Command command = MessageParser.parse(indexMessage);
         Assertions.assertTrue(command instanceof QueryCommand);
     }
 
     @Test
     public void returnRemoveCommandOnValidRemoveMessage() throws ParseException {
         String indexMessage = "REMOVE|package|dep1,dep2";
-        MessageParser messageParser = new MessageParser();
-        Command command = messageParser.parse(indexMessage);
+        Command command = MessageParser.parse(indexMessage);
         Assertions.assertTrue(command instanceof RemoveCommand);
     }
 
     @Test
     public void parseDependenciesIntoList() throws ParseException {
         String indexMessage = "INDEX|package|dep1,dep2";
-        MessageParser messageParser = new MessageParser();
-        IndexCommand command = (IndexCommand) messageParser.parse(indexMessage);
+        IndexCommand command = (IndexCommand) MessageParser.parse(indexMessage);
         String[] result = new String[]{"dep1","dep2"};
         Assertions.assertTrue(Arrays.equals(result,command.getDependencies()));
     }

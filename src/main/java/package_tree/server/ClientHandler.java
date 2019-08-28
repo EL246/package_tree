@@ -11,11 +11,9 @@ import java.net.Socket;
 
 public class ClientHandler extends Thread {
     private final Socket clientSocket;
-    private MessageHandler messageHandler;
 
     ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
-        this.messageHandler = new MessageHandler();
     }
 
     public void run() {
@@ -26,7 +24,7 @@ public class ClientHandler extends Thread {
 
             String message;
             while ((message = in.readLine()) != null) {
-                Response response = messageHandler.handle(message);
+                Response response = MessageHandler.handle(message);
                 out.println(response.getMessage() + "\n");
             }
 
