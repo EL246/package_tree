@@ -1,4 +1,4 @@
-#package_tree
+# package_tree
 
 package_tree is a package indexer that keeps track of package dependencies.
 The server opens a TCP connection on port 8080. Clients can connect and specify
