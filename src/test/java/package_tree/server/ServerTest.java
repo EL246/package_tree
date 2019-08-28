@@ -2,6 +2,7 @@ package package_tree.server;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import package_tree.message.Response;
 
@@ -10,6 +11,7 @@ import java.net.Socket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Disabled
 public class ServerTest {
     private static Socket client;
     private static PrintWriter out;
@@ -28,10 +30,6 @@ public class ServerTest {
         out.println(message);
         String response = in.readLine();
         assertEquals(Response.ERROR.getMessage(), response);
-    }
-
-    @Test
-    public void givenMultipleClientMessage_whenServerRespondsWhenStarted_thenCorrect() {
     }
 
     @AfterAll
