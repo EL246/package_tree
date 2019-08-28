@@ -11,11 +11,6 @@ public class RemoveCommand extends Command {
     public boolean execute() {
         String packageName = getPackageName();
 
-        // if package doesn't exist, return true
-        if (!PackageIndexer.containsPackage(packageName)) {
-            return true;
-        }
-
         //  delete package
         return PackageIndexer.delete(packageName);
     }
