@@ -10,27 +10,23 @@ public class PackageIndexer {
         packages = new HashMap<>();
     }
 
-    public static boolean containsPackage(String packageName) {
-        return packages.containsKey(packageName);
+    public static synchronized boolean query(String packageName) {
+        return containsPackage(packageName);
     }
 
-    public static synchronized boolean isDependedOn(String packageName) {
-        // checks if other packages are dependent on this package
-        for (Package indexed : packages.values()) {
-            if (indexed.isDependentOn(packageName)) {
-                return true;
-            }
+    public static synchronized boolean delete(String packageName) {
+        // if package doesn't exist, return true
+        if (!containsPackage(packageName)) {
+            return true;
         }
-        return false;
-    }
 
-    public static synchronized boolean dependenciesExist(Package pkg) {
-        if (pkg.getDependencies().size() == 0) return true;
-        for (String dependency : pkg.getDependencies()) {
-            if (!packages.containsKey(dependency)) {
-                return false;
-            }
+        // if other packages are dependent on this package, unable to remove
+        if (isDependedOn(packageName)) {
+            return false;
         }
+
+        // remove package from packages Map
+        packages.remove(packageName);
         return true;
     }
 
@@ -44,14 +40,27 @@ public class PackageIndexer {
         return true;
     }
 
-    public static synchronized boolean delete(String packageName) {
-        // if other packages are dependent on this package, unable to remove
-        if (isDependedOn(packageName)) {
-            return false;
-        }
+    private static boolean containsPackage(String packageName) {
+        return packages.containsKey(packageName);
+    }
 
-        // remove package from packages Map
-        packages.remove(packageName);
+    private static boolean isDependedOn(String packageName) {
+        // checks if other packages are dependent on this package
+        for (Package indexed : packages.values()) {
+            if (indexed.isDependentOn(packageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean dependenciesExist(Package pkg) {
+        if (pkg.getDependencies().size() == 0) return true;
+        for (String dependency : pkg.getDependencies()) {
+            if (!packages.containsKey(dependency)) {
+                return false;
+            }
+        }
         return true;
     }
 
