@@ -68,3 +68,54 @@ mvn test
 The provided `./do-package-tree_platform` test was also used as functional testing
 during the development process and to verify the solution. The program has been
 tested and runs successfully with a concurrency factor of over 100.
+
+
+# Design Rationale
+
+#### Server
+The server opens a socket on port 8080 and accepts client connections. A new thread is created
+for each client connection, and managed by a thread pool. A fixed thread pool was chosen
+to save resources if the server becomes heavily loaded. This can be adjusted based on expected
+server demand.
+
+#### ClientHandler
+The ClientHandler reads the messages from the client and calls the MessageHandler to handle
+each new line it receives. After handling the message, ClientHandler returns a response to the client.
+
+#### MessageHandler
+The MessageHandler calls the MessageParser to parse the message. If the parsing is unsuccessful, 
+it catches the ParseException from the MessageParser and returns an error. If parsing is successful, 
+a Command is created and executed, and an OK or FAIL response is returned.
+
+#### MessageParser
+The MessageParser parses the message string passed to it, and throws a ParseException if 
+the message is invalid. It parses on `|` and ensures the correct number of arguments. The first argument is 
+checked against the CommandType enum to ensure its validity. The package name is validated
+as well. If the message is formed correctly, the CommandCreator is called to create a Command 
+of type IndexCommand, QueryCommand, or RemoveCommand.
+
+#### Command and CommandCreator
+The CommandCreator acts as a factory class to create the appropriate type of Command based
+on the Command type (Index/Remove/Query). All of these classes (IndexCommand, RemoveCommand, 
+and QueryCommand) are subclasses of Command and they all inherit the abstract execute() method.
+This method is called by the messageHandler and returns a boolean to signify whether the
+command execution succeeded or failed. A lot of the logic of the execute() method currently
+exists in the PackageIndexer. A possible optimization would be to move this logic into the
+command class and only have basic insert/delete/get methods in the PackageIndexer.
+
+
+#### PackageIndexer and Package
+The PackageIndexer holds all of the indexed packages in a HashMap that maps between the name
+of the package, and the Package object. It maintains consistency of packages
+by enforcing the requirements that packages cannot be added if their dependencies do not exist
+and cannot be removed if they are depended on. It provides the necessary checks prior
+to adding or removing packages from the index.
+
+The PackageIndexer was initially created with synchronized methods which lock the entire object. 
+It was optimized to use a read-write lock instead. However, optimization is limited by the
+additional overhead of the read-write lock. The Package class was initially created to hold
+a Set of dependencies as well as children(packages that depend on it). However, this makes the
+process more write-heavy, so the Set of children was removed. Instead, the entire PackageIndex is iterated over
+each time an item is deleted. This is a less efficient approach but optimized for reduced write-locking
+on the hashmap. A ConcurrentHashMap was considered instead of a HashMap, however, reads from
+a ConcurrentHashMap are not guaranteed to be accurate so it was not used.
