@@ -33,7 +33,7 @@ Possible server response codes are `OK\n`, `FAIL\n`, or `ERROR\n`.
 
 ## Getting Started
 
-To start the server, you can either compile and run the source code. A faster
+To start the server, you can compile and run the source code. A faster
 option is to run the provided jar file with the following command:
 
 ````
@@ -72,11 +72,18 @@ tested and runs successfully with a concurrency factor of over 100.
 
 # Design Rationale
 
+The system is composed of a server class which processes connections by creating a new thread for each and adding it to a threadpool. 
+The ClientHandler processes the messages sent by a client. The client messages are processed by the MessageHandler which parses the
+messages (MessageParser.parse()) and returns a Command by passing the parsed message to a CommandCreator. Once the message is handled,
+the Command.execute() method is called which updates the PackageIndexer and returns a boolean signifying whether the command succeeded.
+PackageIndexer access is controlled by a read-write lock to ensure consistency and thread-safety. Finally, a response is returned to the client.
+
 #### Server
 The server opens a socket on port 8080 and accepts client connections. A new thread is created
-for each client connection, and managed by a thread pool. A fixed thread pool was chosen
-to save resources if the server becomes heavily loaded by limiting the number of threads and 
-submitting excessive threads to a queue. This can be adjusted based on expected server demand.
+for each client connection, and managed by a thread pool. A fixed thread pool limits was chosen
+to save resources if the server becomes heavily loaded, although it is not necessary for 100 or less threads.
+The thread pool limits the number of threads and submits excess requests to a queue. 
+This can be adjusted based on expected server demand.
 
 #### ClientHandler
 The ClientHandler reads messages received from the the new connection socket returned from Server.accept(), on a dedicated thread. 
@@ -106,8 +113,8 @@ command class and only have basic insert/delete/get methods in the PackageIndexe
 
 #### PackageIndexer and Package
 The PackageIndexer holds all of the indexed packages in a HashMap that maps between the name
-of the package, and the Package object. It maintains consistency of packages
-by enforcing the requirements that packages cannot be added if their dependencies do not exist
+of the package, and the Package object. The hashmap allows for constant time retrieval and insertion.
+PackageIndexer maintains consistency of packages by enforcing the requirements that packages cannot be added if their dependencies do not exist
 and cannot be removed if they are depended on. It provides the necessary checks prior
 to adding or removing packages from the index.
 
