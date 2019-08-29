@@ -34,7 +34,8 @@ Possible server response codes are `OK\n`, `FAIL\n`, or `ERROR\n`.
 ## Getting Started
 
 To start the server, you can compile and run the source code. A faster
-option is to run the provided jar file with the following command:
+option is to run the provided jar file with the following command. The jar is located
+in out/artifacts/package_tree_jar/package_tree.jar.
 
 ````
 java -jar ./<path>/package_tree.jar
