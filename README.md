@@ -73,7 +73,7 @@ tested and runs successfully with a concurrency factor of over 100.
 
 # Design Rationale
 
-The system is composed of a server class which processes connections by creating a new thread for each and adding it to a threadpool. 
+The system is composed of a server class which processes connections by creating a new thread for each client and adding it to a threadpool. 
 The ClientHandler processes the messages sent by a client. The client messages are processed by the MessageHandler which parses the
 messages (MessageParser.parse()) and returns a Command by passing the parsed message to a CommandCreator. Once the message is handled,
 the Command.execute() method is called which updates the PackageIndexer and returns a boolean signifying whether the command succeeded.
