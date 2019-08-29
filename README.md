@@ -106,6 +106,7 @@ of type IndexCommand, QueryCommand, or RemoveCommand.
 The CommandCreator acts as a factory class to create the appropriate type of Command based
 on the Command type (Index/Remove/Query). All of these classes (IndexCommand, RemoveCommand, 
 and QueryCommand) are subclasses of Command and they all inherit the abstract execute() method.
+This allows for future extensibility.
 This method is called by the messageHandler and returns a boolean to signify whether the
 command execution succeeded or failed. A lot of the logic of the execute() method currently
 exists in the PackageIndexer. A possible optimization would be to move this logic into the
