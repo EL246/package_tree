@@ -1,7 +1,7 @@
 # package_tree
 
 package_tree is a package indexer that keeps track of package dependencies.
-The server opens a TCP connection on port 8080. Clients can connect and specify
+The server opens a TCP socket and listens on port 8080. Clients can connect and specify
 packages they would like to install, remove, or query. To maintain consistency,
 packages cannot be indexed unless their dependencies are already indexed, and
 packages cannot be removed if other packages depend on it. The server accepts
@@ -75,17 +75,17 @@ tested and runs successfully with a concurrency factor of over 100.
 #### Server
 The server opens a socket on port 8080 and accepts client connections. A new thread is created
 for each client connection, and managed by a thread pool. A fixed thread pool was chosen
-to save resources if the server becomes heavily loaded. This can be adjusted based on expected
-server demand.
+to save resources if the server becomes heavily loaded by limiting the number of threads and 
+submitting excessive threads to a queue. This can be adjusted based on expected server demand.
 
 #### ClientHandler
-The ClientHandler reads the messages from the client and calls the MessageHandler to handle
-each new line it receives. After handling the message, ClientHandler returns a response to the client.
+The ClientHandler reads messages received from the the new connection socket returned from Server.accept(), on a dedicated thread. 
+It calls the MessageHandler to handle each new line it receives. After handling the message, ClientHandler returns a response to the client.
 
 #### MessageHandler
 The MessageHandler calls the MessageParser to parse the message. If the parsing is unsuccessful, 
-it catches the ParseException from the MessageParser and returns an error. If parsing is successful, 
-a Command is created and executed, and an OK or FAIL response is returned.
+it catches the ParseException from the MessageParser and returns `ERROR`. If parsing is successful, 
+a Command is created and executed, and an `OK` or `FAIL` response is returned.
 
 #### MessageParser
 The MessageParser parses the message string passed to it, and throws a ParseException if 
