@@ -74,7 +74,7 @@ tested and runs successfully with a concurrency factor of over 100.
 # Design Rationale
 
 The system is composed of a server class which processes connections by creating a new thread for each client and adding it to a threadpool. 
-The ClientHandler processes the messages sent by a client. The client messages are processed by the MessageHandler which parses the
+The ClientHandler processes the messages sent by a client. The client messages are processed by the MessageHandler, which parses the
 messages and returns a Command by passing the parsed message to a CommandCreator. Once the message is handled,
 the Command.execute() method is called which updates the PackageIndexer and returns a boolean signifying whether the command succeeded.
 PackageIndexer access is controlled by a read-write lock to ensure consistency and thread-safety. Finally, a response is returned to the client.
@@ -84,7 +84,7 @@ The server opens a socket on port 8080 and accepts client connections. A new thr
 for each client connection, and it is managed by a thread pool. A fixed thread pool was chosen. Although it is
 not necessary for <100 threads, it saves resources in cases where the server becomes heavily loaded.
 The thread pool limits the number of threads and submits excess requests to a queue. 
-This can be adjusted based on expected server demand.
+The pool size can be adjusted based on expected server demand.
 
 #### ClientHandler
 The ClientHandler reads messages received from the new connection socket on a dedicated thread. 
@@ -106,7 +106,7 @@ The CommandCreator acts as a factory class to create the appropriate type of Com
 on the Command type (Index/Remove/Query). All of these classes (IndexCommand, RemoveCommand, 
 and QueryCommand) are subclasses of Command and they all inherit the abstract execute() method.
 This allows for future extensibility.
-This method is called by the messageHandler and returns a boolean to signify whether the
+The execute() method is called by the MessageHandler and returns a boolean to signify whether the
 command execution succeeded or failed. A lot of the logic of the execute() method currently
 exists in the PackageIndexer. A possible optimization would be to move this logic into the
 command class and only have basic insert/delete/get methods in the PackageIndexer.
@@ -122,8 +122,6 @@ to adding or removing packages from the index.
 The PackageIndexer was initially created with synchronized methods which lock the entire object. 
 It was optimized to use a read-write lock instead. However, optimization is limited by the
 additional overhead of the read-write lock. The Package class was initially created to hold
-a Set of dependencies as well as children(packages that depend on it). However, this makes the
-process more write-heavy, so the Set of children was removed. Instead, the entire PackageIndex is iterated over
-each time a package is removed. This is a less efficient approach but optimized for reduced write-locking
-on the hashmap. A ConcurrentHashMap was considered instead of a HashMap. However, reads from
+a Set of dependencies as well as children(packages that depend on it). This was optimized by using a counter int instead of a Set.
+A ConcurrentHashMap was considered instead of a HashMap. However, reads from
 a ConcurrentHashMap are not guaranteed to be accurate so it was not used.
