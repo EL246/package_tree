@@ -34,12 +34,13 @@ Possible server response codes are `OK\n`, `FAIL\n`, or `ERROR\n`.
 ## Getting Started
 
 To start the server, you can compile and run the source code. A faster
-option is to run the provided jar file with the following command. The jar is located
-in out/artifacts/package_tree_jar/package_tree.jar.
+option is to run the provided jar file with the following command:
 
 ````
 java -jar ./<path>/package_tree.jar
 ````
+The jar is located
+in out/artifacts/package_tree_jar/package_tree.jar.
 
 A new jar file can also be compiled using the following maven command, if maven
 is installed:
@@ -57,16 +58,15 @@ Listening on port 8080
 
 ## Running the tests
 
-To run the tests simply run the following commands in the project directory. Maven
-should be [installed](https://maven.apache.org/download.cgi) for this to work. JUnit 
-and PowerMock testing frameworks were used for this project.
+JUnit and PowerMock testing frameworks were used for this project. To run the tests simply run the commands below in the project directory.
+Maven should be [installed](https://maven.apache.org/download.cgi) for this to work. 
 
 ````
 mvn clean
 mvn test
 ````
 
-The provided `./do-package-tree_platform` test was also used as functional testing
+Additionally, the provided `./do-package-tree_platform` test was used as functional testing
 during the development process and to verify the solution. The program has been
 tested and runs successfully with a concurrency factor of over 100.
 
@@ -75,19 +75,19 @@ tested and runs successfully with a concurrency factor of over 100.
 
 The system is composed of a server class which processes connections by creating a new thread for each client and adding it to a threadpool. 
 The ClientHandler processes the messages sent by a client. The client messages are processed by the MessageHandler which parses the
-messages (MessageParser.parse()) and returns a Command by passing the parsed message to a CommandCreator. Once the message is handled,
+messages and returns a Command by passing the parsed message to a CommandCreator. Once the message is handled,
 the Command.execute() method is called which updates the PackageIndexer and returns a boolean signifying whether the command succeeded.
 PackageIndexer access is controlled by a read-write lock to ensure consistency and thread-safety. Finally, a response is returned to the client.
 
 #### Server
 The server opens a socket on port 8080 and accepts client connections. A new thread is created
-for each client connection, and managed by a thread pool. A fixed thread pool limits was chosen
-to save resources if the server becomes heavily loaded, although it is not necessary for 100 or less threads.
+for each client connection, and it is managed by a thread pool. A fixed thread pool was chosen. Although it is
+not necessary for <100 threads, it saves resources in cases where the server becomes heavily loaded.
 The thread pool limits the number of threads and submits excess requests to a queue. 
 This can be adjusted based on expected server demand.
 
 #### ClientHandler
-The ClientHandler reads messages received from the the new connection socket returned from Server.accept(), on a dedicated thread. 
+The ClientHandler reads messages received from the new connection socket on a dedicated thread. 
 It calls the MessageHandler to handle each new line it receives. After handling the message, ClientHandler returns a response to the client.
 
 #### MessageHandler
@@ -97,9 +97,8 @@ a Command is created and executed, and an `OK` or `FAIL` response is returned.
 
 #### MessageParser
 The MessageParser parses the message string passed to it, and throws a ParseException if 
-the message is invalid. It parses on `|` and ensures the correct number of arguments. The first argument is 
-checked against the CommandType enum to ensure its validity. The package name is validated
-as well. If the message is formed correctly, the CommandCreator is called to create a Command 
+the message is invalid. It ensures the correct number of arguments and validates the package name. The first argument is 
+checked against the CommandType enum to ensure its validity. If the message is formed correctly, the CommandCreator is called to create a Command 
 of type IndexCommand, QueryCommand, or RemoveCommand.
 
 #### Command and CommandCreator
@@ -125,6 +124,6 @@ It was optimized to use a read-write lock instead. However, optimization is limi
 additional overhead of the read-write lock. The Package class was initially created to hold
 a Set of dependencies as well as children(packages that depend on it). However, this makes the
 process more write-heavy, so the Set of children was removed. Instead, the entire PackageIndex is iterated over
-each time an item is deleted. This is a less efficient approach but optimized for reduced write-locking
-on the hashmap. A ConcurrentHashMap was considered instead of a HashMap, however, reads from
+each time a package is removed. This is a less efficient approach but optimized for reduced write-locking
+on the hashmap. A ConcurrentHashMap was considered instead of a HashMap. However, reads from
 a ConcurrentHashMap are not guaranteed to be accurate so it was not used.
