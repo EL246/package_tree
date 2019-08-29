@@ -31,8 +31,21 @@ public class PackageIndexer {
             writeLock.unlock();
             return false;
         }
-        // Add package to index, or update dependencies.
+
+        // If adding an existing package, copy dependsOnMe counter from previous entry
+        // and decrease dependsOnMe count of current entry's dependencies.
+        if (packages.containsKey(pkg.getName())) {
+            // Copy DependsOnMe counter from previous entry.
+            pkg.updateDependsOnMe(packages.get(pkg.getName()).getDependsOnMe());
+            // Decrease dependsOnMe count of current entry's dependencies
+            Package p = packages.get(pkg.getName());
+            updateDependentCounter(p, -1);
+        }
+
+        // Add new package and update dependsOnMe counters for package dependencies
         packages.put(pkg.getName(), pkg);
+        updateDependentCounter(pkg, 1);
+
         writeLock.unlock();
         return true;
     }
@@ -53,29 +66,26 @@ public class PackageIndexer {
             return false;
         }
 
-        // Remove package from packages Map.
-        packages.remove(packageName);
+        // Remove package and update dependsOnMe counter of dependencies
+        Package p = packages.remove(packageName);
+        updateDependentCounter(p, -1);
+
         writeLock.unlock();
         return true;
     }
 
-    // Must be called under lock.
+    // Must be called under read or write lock.
     private static boolean containsPackage(String packageName) {
         return packages.containsKey(packageName);
     }
 
-    // Must be called under lock.
+    // Must be called under write lock.
     private static boolean isDependedOn(String packageName) {
         // Check if other packages are dependent on this package.
-        for (Package indexed : packages.values()) {
-            if (indexed.isDependentOn(packageName)) {
-                return true;
-            }
-        }
-        return false;
+        return packages.get(packageName).getDependsOnMe() != 0;
     }
 
-    // Must be called under lock.
+    // Must be called under write lock.
     private static boolean dependenciesExist(Package pkg) {
         if (pkg.getDependencies().size() == 0) return true;
         for (String dependency : pkg.getDependencies()) {
@@ -84,6 +94,14 @@ public class PackageIndexer {
             }
         }
         return true;
+    }
+
+    // Must be called under write lock
+    private static void updateDependentCounter(Package pkg, int value) {
+        for (String dependency : pkg.getDependencies()) {
+            Package myDependency = packages.get(dependency);
+            myDependency.updateDependsOnMe(value);
+        }
     }
 
     static Map<String, Package> getPackages() {
